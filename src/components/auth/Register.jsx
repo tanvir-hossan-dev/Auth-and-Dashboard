@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Nav from "./Nav";
-import { Input, Checkbox, Button, Typography } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
+import { Input, Checkbox, Button, Typography, Alert } from "@material-tailwind/react";
+import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { BiLock, BiUser } from "react-icons/bi";
 import { MdAlternateEmail } from "react-icons/md";
+import { useUserRegisterMutation } from "../../Redux/features/user/userApi";
 
 const Register = () => {
   const [passType, setPassType] = useState(true);
@@ -17,7 +18,11 @@ const Register = () => {
   const [agree, setAgree] = useState(false);
   const [agreeError, setAgreeError] = useState(Boolean);
 
-  const handleSubmit = (e) => {
+  const [userRegister, { data, isError, error, isLoading, isSuccess }] = useUserRegisterMutation();
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name) {
       setNameError("Please enter your Name");
@@ -38,7 +43,30 @@ const Register = () => {
         setPasswordError("");
       }
     }
+
+    if (agree === false) {
+      setAgreeError(true);
+    } else {
+      setAgreeError(false);
+    }
+
+    if (name && email && password.length > 6 && agree) {
+      userRegister({ name, email, password });
+    }
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      setName("");
+      setEmail("");
+      setPassword("");
+      setAgree(!agree);
+      setTimeout(() => {
+        navigate("/home");
+      }, 2000);
+    }
+  }, [isSuccess]);
+
   return (
     <div>
       <Nav />
@@ -108,8 +136,8 @@ const Register = () => {
               />
               {agreeError && <p className="mt-2 text-red-600 ml-2">Please agrre with terms and condition</p>}
             </div>
-            <Button type="submit" className="mt-6" fullWidth>
-              Sign Up
+            <Button type="submit" className="mt-6" fullWidth disabled={isLoading}>
+              {isLoading ? "Loading..." : "Sign Up"}
             </Button>
             <Typography color="gray" className="mt-4 text-center font-normal">
               Already have an account?{" "}
@@ -118,6 +146,13 @@ const Register = () => {
               </Link>
             </Typography>
           </form>
+          {error?.data?.error && (
+            <Alert color="red">
+              Only defined users succeed registration. <br /> Try this email and password.
+              <br /> tracey.ramos@reqres.in, password
+            </Alert>
+          )}
+          {!isError && isSuccess && <Alert color="green">Account create successfull.</Alert>}
         </div>
       </div>
     </div>
