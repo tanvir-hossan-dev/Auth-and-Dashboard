@@ -1,19 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Nav from "./Nav";
-import { Input, Button, Typography, Checkbox } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
+import { Input, Button, Typography, Checkbox, Alert } from "@material-tailwind/react";
+import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { BiLock } from "react-icons/bi";
 import { MdAlternateEmail } from "react-icons/md";
+import { useUserLoginMutation } from "../../Redux/features/user/userApi";
 
 const Login = () => {
   const [passType, setPassType] = useState(true);
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [userLogin, { data, isError, error, isLoading, isSuccess }] = useUserLoginMutation();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,7 +31,22 @@ const Login = () => {
     } else {
       setPasswordError("");
     }
+
+    if (email && passType) {
+      userLogin({ email, password });
+    }
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      setEmail("");
+      setPassword("");
+
+      setTimeout(() => {
+        navigate("/home");
+      }, 2000);
+    }
+  }, [isSuccess]);
   return (
     <div>
       <Nav />
@@ -71,7 +89,6 @@ const Login = () => {
                 {passwordError && <p className="mt-2 text-red-600 ml-2">{passwordError}</p>}
               </div>
               <Checkbox
-                onClick={() => setAgree(!agree)}
                 label={
                   <Typography variant="small" color="gray" className="flex items-center font-normal">
                     Remember me
@@ -80,8 +97,8 @@ const Login = () => {
                 containerProps={{ className: "-ml-2.5" }}
               />
             </div>
-            <Button type="submit" className="mt-6" fullWidth>
-              Sign In
+            <Button type="submit" className="mt-6" fullWidth disabled={isLoading}>
+              {isLoading ? "Loading..." : "Sign In"}
             </Button>
             <Typography color="gray" className="mt-4 text-center font-normal">
               Create an account?{" "}
@@ -90,6 +107,8 @@ const Login = () => {
               </Link>
             </Typography>
           </form>
+          {error?.data?.error && <Alert color="red">User not found!</Alert>}
+          {!isError && isSuccess && <Alert color="green">Account create successfull.</Alert>}
         </div>
       </div>
     </div>
