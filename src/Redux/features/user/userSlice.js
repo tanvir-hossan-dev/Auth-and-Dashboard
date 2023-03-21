@@ -12,11 +12,11 @@ export const userSlice = createSlice({
   reducers: {
     userLoggedIn: (state, action) => {
       state.user = action.payload.user;
-      state.accessToken = action.payload.accessToken;
+      state.token = action.payload.token;
     },
     userLogedOut: (state) => {
       state.user = undefined;
-      state.accessToken = undefined;
+      state.token = undefined;
     },
   },
 });

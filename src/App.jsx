@@ -1,15 +1,48 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
+import useAuth from "./hooks/useAuth";
+import useAuthChecked from "./hooks/useAuthChecked";
+import Home from "./pages/Home";
+import PrivateRoute from "./specialroutes/PrivateRoute";
+import PublicRoute from "./specialroutes/PublicRoute";
 
 function App() {
-  return (
-    <BrowserRouter>
+  const authChecked = useAuthChecked();
+
+  const auth = useAuth();
+
+  return !authChecked ? (
+    <h1>Loading...</h1>
+  ) : (
+    <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          }
+        />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
 
