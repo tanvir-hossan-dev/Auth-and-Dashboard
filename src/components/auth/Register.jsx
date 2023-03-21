@@ -61,9 +61,6 @@ const Register = () => {
       setEmail("");
       setPassword("");
       setAgree(!agree);
-      setTimeout(() => {
-        navigate("/home");
-      }, 2000);
     }
   }, [isSuccess]);
 

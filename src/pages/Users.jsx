@@ -1,16 +1,32 @@
-import React from "react";
-import { Input, Menu, MenuHandler, MenuList, MenuItem, Avatar, Typography } from "@material-tailwind/react";
+import React, { useState } from "react";
+import {
+  Input,
+  Menu,
+  MenuHandler,
+  MenuList,
+  MenuItem,
+  Avatar,
+  Typography,
+  Alert,
+  Button,
+} from "@material-tailwind/react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { IoMdNotifications } from "react-icons/io";
+import { SlOptions } from "react-icons/sl";
 import { useDispatch } from "react-redux";
 import { userLogedOut } from "../Redux/features/user/userSlice";
+import { useGetProductsQuery } from "../Redux/features/products/productAPi";
 
 const Users = () => {
+  const [pageNumber, setPageNumber] = useState(1);
   const dispatch = useDispatch();
   const hanldeLogOut = () => {
     dispatch(userLogedOut());
     localStorage.removeItem("Auth-Dashboard");
   };
+
+  const { data, isLoading, isSuccess } = useGetProductsQuery(pageNumber);
+
   return (
     <div className="w-screen  px-8 pt-7">
       {/* User Navbar Section  Start*/}
@@ -54,40 +70,50 @@ const Users = () => {
         <h2 className="text-[#323B4B] text-[30px] font-semibold font-inter mb-4">Users List</h2>
 
         <div className="overflow-x-auto">
-          <table className="table w-full">
-            {/* head */}
-            <thead>
-              <tr>
-                <th>#ID</th>
-                <th>Name</th>
-                <th>E-mail</th>
-                <th>Options </th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* row 1 */}
-              <tr>
-                <th>1</th>
-                <td>Cy Ganderton</td>
-                <td>Quality Control Specialist</td>
-                <td>Blue</td>
-              </tr>
-              {/* row 2 */}
-              <tr className="hover">
-                <th>2</th>
-                <td>Hart Hagerty</td>
-                <td>Desktop Support Technician</td>
-                <td>Purple</td>
-              </tr>
-              {/* row 3 */}
-              <tr>
-                <th>3</th>
-                <td>Brice Swyre</td>
-                <td>Tax Accountant</td>
-                <td>Red</td>
-              </tr>
-            </tbody>
-          </table>
+          {data?.data.length > 0 ? (
+            <table className="table w-full">
+              {/* head */}
+              <thead>
+                <tr>
+                  <th>#ID</th>
+                  <th>Name</th>
+                  <th>E-mail</th>
+                  <th>Options </th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* row 1 */}
+                {data?.data?.map((item) => (
+                  <tr key={item.id} className="hover">
+                    <th>{item.id}</th>
+                    <td>
+                      {item.first_name} {item.last_name}
+                    </td>
+                    <td>{item.email}</td>
+                    <td className="cursor-pointer">
+                      <SlOptions />{" "}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <Alert color="red">User not found!</Alert>
+          )}
+        </div>
+        <div className="mt-6">
+          <Button
+            color="blue"
+            className="mr-4"
+            disabled={pageNumber === 1}
+            onClick={() => setPageNumber(pageNumber - 1)}
+          >
+            Prev
+          </Button>
+          <button className="mr-4 font-medium font-inter text-[20px]">{pageNumber}</button>
+          <Button color="blue" onClick={() => setPageNumber(pageNumber + 1)}>
+            Next
+          </Button>
         </div>
       </div>
     </div>

@@ -41,10 +41,6 @@ const Login = () => {
     if (isSuccess) {
       setEmail("");
       setPassword("");
-
-      setTimeout(() => {
-        navigate("/home");
-      }, 2000);
     }
   }, [isSuccess]);
   return (
