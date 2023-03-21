@@ -4,6 +4,7 @@ import Register from "./components/auth/Register";
 import Navbar from "./components/Navbar/Navbar";
 import useAuth from "./hooks/useAuth";
 import useAuthChecked from "./hooks/useAuthChecked";
+import Home from "./pages/Home";
 import Users from "./pages/Users";
 import PrivateRoute from "./specialroutes/PrivateRoute";
 import PublicRoute from "./specialroutes/PublicRoute";
@@ -17,30 +18,40 @@ function App() {
     <h1>Loading...</h1>
   ) : (
     <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
+        />
+      </Routes>
       <div className="flex">
         {auth && <Navbar />}
         <Routes>
           <Route
-            path="/"
-            element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <PublicRoute>
-                <Register />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/Users"
+            path="/users"
             element={
               <PrivateRoute>
                 <Users />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/home"
+            element={
+              <PrivateRoute>
+                <Home />
               </PrivateRoute>
             }
           />

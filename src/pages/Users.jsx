@@ -75,6 +75,7 @@ const Users = () => {
       </div>
       {/* User Navbar Section  End*/}
 
+      {/* Table section start  */}
       <div>
         <h2 className="text-[#323B4B] text-[30px] font-semibold font-inter mb-4">Users List</h2>
 
