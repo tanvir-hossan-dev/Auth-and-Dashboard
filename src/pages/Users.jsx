@@ -19,13 +19,16 @@ import { useGetProductsQuery } from "../Redux/features/products/productAPi";
 
 const Users = () => {
   const [pageNumber, setPageNumber] = useState(1);
+  const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   const hanldeLogOut = () => {
     dispatch(userLogedOut());
     localStorage.removeItem("Auth-Dashboard");
   };
 
-  const { data, isLoading, isSuccess } = useGetProductsQuery(pageNumber);
+  const { data } = useGetProductsQuery(pageNumber);
+
+  console.log(search);
 
   return (
     <div className="w-screen  px-8 pt-7">
@@ -33,7 +36,13 @@ const Users = () => {
       <div className="mx-auto mb-8">
         <div className=" mx-auto flex items-center justify-between">
           <div className="w-[500px]">
-            <Input color="blue" className="bg-[#F0F5FA]" label="Search" icon={<AiOutlineSearch />} />
+            <Input
+              color="blue"
+              onChange={(e) => setSearch(e.target.value)}
+              className="bg-[#F0F5FA]"
+              label="Search"
+              icon={<AiOutlineSearch />}
+            />
           </div>
           <div className="flex items-center">
             <IoMdNotifications className="mr-6 text-[30px] text-[#B0B7C3]" />
@@ -83,18 +92,24 @@ const Users = () => {
               </thead>
               <tbody>
                 {/* row 1 */}
-                {data?.data?.map((item) => (
-                  <tr key={item.id} className="hover">
-                    <th>{item.id}</th>
-                    <td>
-                      {item.first_name} {item.last_name}
-                    </td>
-                    <td>{item.email}</td>
-                    <td className="cursor-pointer">
-                      <SlOptions />{" "}
-                    </td>
-                  </tr>
-                ))}
+                {data?.data
+                  ?.filter(
+                    (item) =>
+                      item.first_name.toLowerCase().includes(search.toLowerCase()) ||
+                      item.email.toLowerCase().includes(search.toLowerCase())
+                  )
+                  .map((item) => (
+                    <tr key={item.id} className="hover">
+                      <th>{item.id}</th>
+                      <td>
+                        {item.first_name} {item.last_name}
+                      </td>
+                      <td>{item.email}</td>
+                      <td className="cursor-pointer">
+                        <SlOptions />{" "}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           ) : (
