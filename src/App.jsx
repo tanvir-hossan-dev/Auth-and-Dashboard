@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
+import Navbar from "./components/Navbar/Navbar";
 import useAuth from "./hooks/useAuth";
 import useAuthChecked from "./hooks/useAuthChecked";
 import Home from "./pages/Home";
@@ -16,6 +17,7 @@ function App() {
     <h1>Loading...</h1>
   ) : (
     <Router>
+      {auth && <Navbar />}
       <Routes>
         <Route
           path="/"
@@ -33,14 +35,7 @@ function App() {
             </PublicRoute>
           }
         />
-        <Route
-          path="/home"
-          element={
-            <PrivateRoute>
-              <Home />
-            </PrivateRoute>
-          }
-        />
+        <Route path="/home" element={<PrivateRoute>{/* <Home /> */}</PrivateRoute>} />
       </Routes>
     </Router>
   );
