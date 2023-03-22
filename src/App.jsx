@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar/Navbar";
 import useAuth from "./hooks/useAuth";
 import useAuthChecked from "./hooks/useAuthChecked";
 import Home from "./pages/Home";
+import Sales from "./pages/Sales";
 import Users from "./pages/Users";
 import PrivateRoute from "./specialroutes/PrivateRoute";
 import PublicRoute from "./specialroutes/PublicRoute";
@@ -52,6 +53,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Home />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/sales"
+            element={
+              <PrivateRoute>
+                <Sales />
               </PrivateRoute>
             }
           />

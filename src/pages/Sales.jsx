@@ -1,7 +1,7 @@
 import { Alert } from "@material-tailwind/react";
 import React from "react";
 
-const Home = () => {
+const Sales = () => {
   return (
     <div className="w-screen  px-8 pt-7">
       <Alert color="blue">An info alert for showing message.</Alert>
@@ -9,4 +9,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Sales;

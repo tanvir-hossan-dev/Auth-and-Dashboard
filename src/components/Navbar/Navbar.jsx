@@ -18,20 +18,21 @@ const Navbar = () => {
         <ul className="mt-6">
           <li>
             <Link
-              to="/home"
-              className={`text-[#B0B7C3] flex items-center p-4 ${pathname === "/home" && "bg-[#F0F5FA]"} rounded-2xl`}
-            >
-              <RxDashboard className="mr-2" /> DashBoard
-            </Link>
-          </li>
-          <li>
-            <Link
               to="/users"
               className={`text-[#B0B7C3] flex items-center p-4 ${pathname === "/users" && "bg-[#F0F5FA]"} rounded-2xl`}
             >
               <FiUsers className="mr-2" /> Users
             </Link>
           </li>
+          <li>
+            <Link
+              to="/home"
+              className={`text-[#B0B7C3] flex items-center p-4 ${pathname === "/home" && "bg-[#F0F5FA]"} rounded-2xl`}
+            >
+              <RxDashboard className="mr-2" /> DashBoard
+            </Link>
+          </li>
+
           <li>
             <Link
               to="/sales"
